@@ -1,4 +1,6 @@
-import os
+# 1. Gerando o arquivo principal app.py
+with open('app.py', 'w', encoding='utf-8') as f:
+    f.write('''import os
 import telebot
 import yfinance as yf
 from flask import Flask, request
@@ -73,11 +75,11 @@ def calcular_painel_abertura():
 
     hora_atual = datetime.now().strftime("%H:%M")
     mensagem = (
-        f"📊 <b>PAINEL DE ABERTURA DOS MINIS - {hora_atual}</b>\n\n"
-        f"🏆 <b>SINAL: {status}</b>\n"
-        f"🧮 Pontuação IPA: {pontuacao:+.0f} pontos\n\n"
-        f"<b>Status dos Ativos:</b>\n" + "\n".join(detalhes) + "\n\n"
-        f"-----------------------------------------\n"
+        f"📊 <b>PAINEL DE ABERTURA DOS MINIS - {hora_atual}</b>\\n\\n"
+        f"🏆 <b>SINAL: {status}</b>\\n"
+        f"🧮 Pontuação IPA: {pontuacao:+.0f} pontos\\n\\n"
+        f"<b>Status dos Ativos:</b>\\n" + "\\n".join(detalhes) + "\\n\\n"
+        f"-----------------------------------------\\n"
         f"💡 <i>Foque no Mini Índice. Siga o gerenciamento de risco!</i>"
     )
     return mensagem
@@ -86,10 +88,10 @@ def calcular_painel_abertura():
 def enviar_boas_vindas(message):
     usuario = message.from_user.first_name if message.from_user.first_name else "Investidor"
     boas_vindas = (
-        f"👋 Olá, <b>{usuario}</b>! Seja bem-vindo ao Bot de Análise de Mercado.\n\n"
-        "Aqui estão os comandos que você pode utilizar:\n"
-        "📊 /analise - Calcula e gera o relatório IPA em tempo real.\n"
-        "ℹ️ /ajuda - Exibe a lista completa de recursos do bot.\n"
+        f"👋 Olá, <b>{usuario}</b>! Seja bem-vindo ao Bot de Análise de Mercado.\\n\\n"
+        "Aqui estão os comandos que você pode utilizar:\\n"
+        "📊 /analise - Calcula e gera o relatório IPA em tempo real.\\n"
+        "ℹ️ /ajuda - Exibe a lista completa de recursos do bot.\\n"
         "📊 /ticker &lt;codigo&gt; - Consulta cotação individual."
     )
     bot.reply_to(message, boas_vindas, parse_mode="HTML")
@@ -110,11 +112,11 @@ def responder_analise(message):
 @bot.message_handler(commands=['help', 'ajuda'])
 def enviar_ajuda(message):
     texto_ajuda = (
-        "🤖 <b>Guia de Comandos do Bot de Análise</b>\n\n"
-        "/start - Inicia o bot e exibe as boas-vindas.\n"
-        "/analise - Gera o relatório IPA completo com os principais ativos.\n"
-        "/ticker &lt;codigo&gt; - Consulta o preço de um ativo específico (Ex: &lt;code&gt;/ticker PETR4.SA&lt;/code&gt;).\n\n"
-        "<i>Dica: Sempre adicione ".SA" para ações brasileiras no Yahoo Finance!</i>"
+        "🤖 <b>Guia de Comandos do Bot de Análise</b>\\n\\n"
+        "/start - Inicia o bot e exibe as boas-vindas.\\n"
+        "/analise - Gera o relatório IPA completo com os principais ativos.\\n"
+        "/ticker &lt;codigo&gt; - Consulta o preço de um ativo específico (Ex: &lt;code&gt;/ticker PETR4.SA&lt;/code&gt;).\\n\\n"
+        "<i>Dica: Sempre adicione \'.SA\' para ações brasileiras no Yahoo Finance!</i>"
     )
     bot.reply_to(message, texto_ajuda, parse_mode="HTML")
 
@@ -139,11 +141,11 @@ def buscar_ticker_especifico(message):
         moeda = "R$" if ".SA" in ticker_usuario else "$"
 
         resposta = (
-            f"📈 <b>Cotação de {ticker_usuario}</b>\n"
-            f"---------------------------------\n"
-            f"💵 Preço Atual: {moeda} {preco_atual:.2f}\n"
-            f"{emoji} Variação Diária: {variacao:+.2f}%\n"
-            f"---------------------------------\n"
+            f"📈 <b>Cotação de {ticker_usuario}</b>\\n"
+            f"---------------------------------\\n"
+            f"💵 Preço Atual: {moeda} {preco_atual:.2f}\\n"
+            f"{emoji} Variação Diária: {variacao:+.2f}%\\n"
+            f"---------------------------------\\n"
             f"ℹ️ <i>Dados fornecidos pelo Yahoo Finance.</i>"
         )
         bot.reply_to(message, resposta, parse_mode="HTML")
@@ -161,7 +163,7 @@ def obter_updates():
         update = telebot.types.Update.de_json(json_string)
         bot.process_new_updates([update])
         return "", 200
-    else: 
+    else:
         return "Acesso Proibido", 403
 
 if __name__ == '__main__':
@@ -177,4 +179,14 @@ if __name__ == '__main__':
         print(f"⚠️ Falha ao configurar Webhook: {e}")
 
     print(f"🏃 Iniciando servidor Flask na porta {PORT}...")
-    app.run(host="0.0.0.0", port=PORT, debug=False, use_reloader=False)
+    app.run(host="0.0.0.0", port=PORT, debug=False, use_reloader=False)''')
+
+# 2. Gerando requirements.txt
+with open('requirements.txt', 'w', encoding='utf-8') as f:
+    f.write('pyTelegramBotAPI\nyfinance\nrequests\nFlask\ngunicorn\nlxml\n')
+
+# 3. Gerando Procfile
+with open('Procfile', 'w', encoding='utf-8') as f:
+    f.write('web: gunicorn app:app\n')
+
+print("🎉 Tudo pronto! Os 3 arquivos foram gerados com sucesso na sua barra lateral de arquivos do Colab (ícone de pasta 📁).")
